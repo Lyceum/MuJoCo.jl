@@ -1,0 +1,34 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        arch: [x64]
+        julia-version: ['1.3.0']
+    steps:
+      - uses: actions/checkout@v1.0.0
+      - uses: julia-actions/setup-julia@latest
+        with:
+          version: ${{ matrix.julia-version }}
+          arch: ${{ matrix.arch }}
+      - name: Add registry
+        run: |
+          julia --color=yes --project -e 'using Pkg; Registry.add(RegistrySpec(url="https://github.com/Lyceum/LyceumRegistry.git"))'
+          julia --color=yes --project -e 'using Pkg; Registry.add(RegistrySpec(url="https://github.com/JuliaRegistries/General.git"))'
+        shell: bash
+      - name: Install dependencies
+        run: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
+      - name: Build and deploy
+        env:
+          MUJOCOJL_TEST_KEY: ${{ secrets.MJKEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For authentication with GitHub Actions token
+          DOCUMENTER_KEY: ${{ secrets.LYCEUMBOT_DEPLOY_KEY}}
+        run: julia --project=docs/ docs/make.jl

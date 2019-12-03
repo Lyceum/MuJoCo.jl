@@ -1,0 +1,6 @@
+# MuJoCo
+
+```@autodocs
+Modules = [MuJoCo]
+```
+
