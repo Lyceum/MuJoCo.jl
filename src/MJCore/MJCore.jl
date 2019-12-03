@@ -53,7 +53,7 @@ function __init__()
         path = normpath(ENV[MJKEY_ENV_VAR])
         isfile(path) || @mjerror "activating with key $path: No such file or directory"
         ACTIVATED[] = Bool(mj_activate(path))
-        isactivated() || @mjerror "activating with key $path: Key invalid"
+        isactivated() || @mjerror "activating with key $path: invalid key"
     elseif !isactivated() && haskey(ENV, MJTESTKEY_ENV_VAR)
         mjkey = ENV[MJTESTKEY_ENV_VAR]
         mktemp() do path, io
