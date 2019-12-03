@@ -32,5 +32,5 @@ jobs:
       - uses: julia-actions/julia-buildpkg@master
       - uses: julia-actions/julia-runtest@master
         env:
-          MUJOCOJL_TEST_KEY: ${{ secrets.MJKEY }}
+          MUJOCOJL_TEST_KEY: ${{ secrets.MUJOCOJL_TEST_KEY }}
 
