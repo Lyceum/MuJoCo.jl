@@ -82,7 +82,6 @@ using LinearAlgebra
             mj_resetData(m, d)
             mj_resetData(jm, jd)
 
-            @test m.nq == jm.nq == 8
             @test m.opt.timestep == jm.opt.timestep == 0.001
 
             qpos0 = copy(jd.qpos)
@@ -144,8 +143,8 @@ using LinearAlgebra
         @test isapprox(dn.xquat[:y, :box1_body], sqrt(2)/2)
         @test isapprox(dn.xquat[:z, :box1_body], 0.0)
 
-        @test mn.actuator_forcerange[:min, :box2_motor] == -1.0
-        @test mn.actuator_forcerange[:max, :box2_motor] == 1.0
+        @test mn.actuator_forcerange[:min, :box1_motor] == -1.0
+        @test mn.actuator_forcerange[:max, :box1_motor] == 1.0
 
         @test mn.mat_rgba[:] == Float32[0.1, 0.2, 0.3, 0.4]
 

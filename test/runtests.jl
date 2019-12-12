@@ -2,11 +2,15 @@ using Test
 using UnsafeArrays, BangBang
 
 using MuJoCo
-using MuJoCo: TESTMODELXML, TESTMODELMJB
+using MuJoCo: TESTMODELXML
 
 using MuJoCo.MJCore
 using MuJoCo.MJCore: mjtNum, mjNSOLVER, mjNREF
 
+const TESTMODELMJB = joinpath(@__DIR__, "testmodel.mjb")
+
+rm(TESTMODELMJB, force=true)
+mj_saveModel(mj_loadXML(TESTMODELXML), TESTMODELMJB)
 
 function makemd()
     pm = mj_loadXML(TESTMODELXML)

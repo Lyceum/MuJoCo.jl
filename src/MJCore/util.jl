@@ -11,12 +11,52 @@ function load_mj_string_array(name::Symbol, n)
     Base.map(Base.unsafe_string, A)
 end
 
-
-struct MuJoCoException <: Exception
-    errstr::String
+function modelkind(path::AbstractString)
+    ext = last(split(last(splitext(path)), '.'))
+    if ext in ("xml", "XML", "mjcf", "MJCF")
+        return :MJCF
+    elseif ext in ("mjb", "MJB")
+        return :MJB
+    else
+        throw(ArgumentError("model path must end with one of [xml, XML, mjcf, MJCF, mjb, MJB]. Got: $ext"))
+    end
 end
 
-MuJoCoException(errstr::Cstring) = MuJoCoException(unsafe_string(errstr))
+function check_modelpath(path::AbstractString)
+    if isfile(path)
+        return modelkind(path)
+    else
+        throw(ArgumentError("model path $path does not exist"))
+    end
+end
+
+
+tostring(error::String) = error
+tostring(error::Cstring) = unsafe_string(error)
+tostring(error::AbstractVector{UInt8}) = String(readuntil(IOBuffer(error), 0x00))
+
+
+struct MuJoCoException <: Exception
+    error::String
+    extra::Union{Nothing, String}
+    function MuJoCoException(error, extra = nothing)
+        new(tostring(error), extra === nothing ? nothing : tostring(extra))
+    end
+end
+
+Base.show(io::IO, ::MIME"text/plain", ex::MuJoCoException) = show(io, ex)
+function Base.show(io::IO, ex::MuJoCoException)
+    lines = readlines(IOBuffer(ex.error))
+    if ex.extra !== nothing
+        println(io, "MuJoCoException(", ex.extra, "):")
+        foreach(l->println(io, l), lines)
+    elseif length(lines) > 1
+        println(io, "MuJoCoException:")
+        foreach(l->println(io, l), lines)
+    else
+        print(io, "MuJoCoException(", first(lines), ')')
+    end
+end
 
 function MuJoCoException(
     errstr::Union{SVector{N,UInt8},MVector{N,UInt8},Vector{UInt8}};
@@ -32,8 +72,12 @@ function MuJoCoException(
     MuJoCoException(errstr)
 end
 
-macro mjerror(s)
-    :(throw(MuJoCoException($(esc(s)))))
+macro mjerror(errstr)
+    :(throw(MuJoCoException($(esc(errstr)))))
+end
+
+macro mjerror(msg, errstr)
+    :(throw(MuJoCoException($(esc(msg)), $(esc(errstr)))))
 end
 
 macro mjerrormsg(s)
@@ -46,27 +90,9 @@ macro mjerrormsg(s)
 end
 
 
-macro check_isfile(path)
-    quote
-        local path = $(esc(path))
-        isfile(path) || throw(MuJoCoException("$path: No such file"))
-    end
-end
-
-macro check_isvalidfilepath(path)
-    quote
-        local path = $(esc(path))
-        local dir = dirname(path)
-        if isdirpath(path) || !(isdir(path) || isdirpath(dir) || isdir(dir))
-            throw(MuJoCoException("$path: not a valid path"))
-        end
-    end
-end
-
 
 union_types(x::Union) = (x.a, union_types(x.b)...)
 union_types(x::Type) = (x,)
-
 
 macro uninitable(ex)
     sdef = MacroTools.splitstructdef(ex)

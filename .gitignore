@@ -1,4 +1,3 @@
 .DS_Store
 foo.jl
-mjkey.txt
-/dev/
+test/testmodel.mjb

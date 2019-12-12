@@ -31,14 +31,33 @@
         </body>
 
         <body name="box2_body" pos="1 0 0.5" xyaxes="0 1 0 1 0 0" >
-            <geom name="box2_geom" type="box" size="0.1 0.1 0.8" />
+            <geom name="box2_geom" type="box" size="0.1 0.1 1" />
             <joint name="box2_joint" type="slide" axis="1 0 0" />
+        </body>
+
+        <body name="box3_body" pos="2 0 0.5" xyaxes="0 1 0 1 0 0" >
+            <geom name="box3_geom" type="box" size="0.1 0.1 1.5" />
+            <joint name="box3_joint" type="slide" axis="1 0 0" />
+        </body>
+
+        <body name="box1_mocap_body" pos="0 1 0.5" xyaxes="0 1 0 1 0 0" >
+            <geom name="box1_mocap_geom" type="box" size="0.1 0.1 0.5" />
+        </body>
+
+        <body name="box2_mocap_body" pos="1 1 0.5" xyaxes="0 1 0 1 0 0" >
+            <geom name="box2_mocap_geom" type="box" size="0.1 0.1 1" />
+        </body>
+
+        <body name="box3_mocap_body" pos="2 1 0.5" xyaxes="0 1 0 1 0 0" >
+            <geom name="box3_mocap_geom" type="box" size="0.1 0.1 1.5" />
         </body>
 
     </worldbody>
 
     <actuator>
-        <motor name="box2_motor" joint="box2_joint" forcelimited="true" forcerange="-1 1" />
+        <motor name="box1_motor" joint="box1_joint" forcelimited="true" forcerange="-1 1" />
+        <cylinder name="box2_cylinder" joint="box2_joint" forcelimited="true" forcerange="-1 1" />
+        <muscle name="box3_muscle" joint="box3_joint" lengthrange="0 0.2" forcelimited="true" forcerange="-1 1" />
     </actuator>
 
 </mujoco>

@@ -137,9 +137,7 @@ Throws `MuJoCoException` if failure.
 @inline mj_loadXML(filename::String, vfs::Ref{mjVFS}) = _mj_loadXML(filename, vfs)
 @inline mj_loadXML(filename::String) = _mj_loadXML(filename, Ptr{mjVFS}(0))
 function _mj_loadXML(filename::String, vfs::Union{Ref{mjVFS},Ptr{mjVFS}})
-    @check_isfile filename
-    vfs isa Ptr && @assert vfs == C_NULL
-
+    modelkind(filename) === :MJCF || throw(ArgumentError("Not a XML/MJCF file: $filename"))
     err = MVector{ERRORSIZE,UInt8}(undef)
     pm = ccall(
         (:mj_loadXML, libmujoco),
@@ -150,7 +148,7 @@ function _mj_loadXML(filename::String, vfs::Union{Ref{mjVFS},Ptr{mjVFS}})
         err,
         ERRORSIZE,
     )
-    pm == C_NULL && @mjerror SVector(err)
+    pm == C_NULL && @mjerror SVector(err) "Not a valid XML file"
     return pm
 end
 
@@ -161,7 +159,6 @@ Update XML data structures with info from low-level model `m`, save as MJCF
 to `filename`. Returns 1 if success, else throws a `MuJoCoException`.
 """
 function mj_saveLastXML(filename::String, m::Ptr{mjModel})
-    @check_isvalidfilepath filename
     errsz = 1000
     err = MVector{ERRORSIZE,UInt8}(undef)
     ret = ccall(

@@ -103,6 +103,7 @@ globals = (
 
 @testset "$k" for (k, v) in pairs(globals)
     if k === :mjVISSTRING
+        @info k
         @test_broken MJCore.getglobal(Val{k}()) == v
     else
         @test MJCore.getglobal(Val{k}()) == v

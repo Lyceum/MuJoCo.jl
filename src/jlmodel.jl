@@ -98,18 +98,13 @@ function build_jlModel()
         function jlModel(pm::Ptr{mjModel}; own::Bool = false)
             m = unsafe_load(pm)
             jm = jlModel(m, pm, $(ctorargs...))
-            # must free C-allocated Ptr!
+            # must free C-allocated Ptr, not pointer to m!
             own && Base.finalizer(jm -> MJCore.mj_deleteModel(jm.cptr), jm)
             jm
         end
         function jlModel(path::String)
-            pm = if endswith(path, "xml") || endswith(path, "XML")
-                mj_loadXML(path)
-            elseif endswith(path, "mjb") || endswith(path, "MJB")
-                mj_loadModel(path)
-            else
-                @mjerror "path must end with one of [xml, XML, mjb, MJB]. Got: $path"
-            end
+            kind = MJCore.check_modelpath(path)
+            pm = kind === :MJCF ? mj_loadXML(path) : mj_loadModel(path)
             pm == C_NULL && @mjerror "$path not a valid MJCF or MJB file"
             jlModel(pm, own = true)
         end

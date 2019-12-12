@@ -147,7 +147,7 @@ function sizenames2axes(m::jlModel)
     # so we only need the final `na` elements in the list of all actuator names.
     if m.na != 0
         act_names = szname2axes[:nu].labels
-        szname2axes[:na] = MJAxis(act_names[end-m.na+1:end], 1:m.na)
+        szname2axes[:na] = LinearAxis(:na, act_names[end-m.na+1:end])
     end
 
     # And a sanity check

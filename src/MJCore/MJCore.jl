@@ -2,6 +2,7 @@ module MJCore
 
 using MuJoCo_jll
 using StaticArrays, UnsafeArrays, CEnum, MacroTools, Base64
+using Base: last
 
 
 include("exports.jl")

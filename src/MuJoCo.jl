@@ -10,7 +10,6 @@ using
     BangBang
 
 const TESTMODELXML = joinpath(@__DIR__, "../test/testmodel.xml")
-const TESTMODELMJB = joinpath(@__DIR__, "../test/testmodel.mjb")
 
 export
     # Sugar
@@ -44,8 +43,6 @@ using .MJCore: AbstractMJModel,
                 UnsafeVector,
                 UnsafeMatrix,
                 MuJoCoException,
-                @check_isvalidfilepath,
-                @check_isfile,
                 @mjerror,
                 load_mj_string_array,
                 MuJoCoException,
