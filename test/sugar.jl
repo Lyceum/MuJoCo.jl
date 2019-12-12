@@ -41,7 +41,7 @@ using LinearAlgebra
                     true
                 else
                     f2 = getproperty(jm2, name)
-                    ret = isapprox(f1, f2)
+                    ret = isapprox(f1, f2) # TODO
                     #ret=if Sys.iswindows() && typeof(f1) <: AbstractArray
                     #    # For some reason on Windows, subsequent allocations yield oh-so-slightly different values
                     #    return isapprox(f1, f2)
@@ -54,6 +54,24 @@ using LinearAlgebra
                     #end
                 end
             end
+
+            let m1 = jlModel(TESTMODELXML)
+                m2 = copy(m1)
+                m3 = deepcopy(m1)
+                m4 = jlModel(m1)
+                @test all(propertynames(jlModel)) do n
+                    x1 = getproperty(m1, n)
+                    x2 = getproperty(m2, n)
+                    x3 = getproperty(m3, n)
+                    x4 = getproperty(m4, n)
+                    if x1 isa Number || x2 isa AbstractArray
+                        return x1 == x2 == x3 == x4
+                    else
+                        return true
+                    end
+                end
+            end
+
         end
 
         @testset "jlData" begin
