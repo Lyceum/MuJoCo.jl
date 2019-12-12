@@ -105,11 +105,13 @@ function build_jlData()
             ownmodel && mj_deleteModel(pm)
             jd
         end
-        jlData(pm::Ptr{mjModel}; own::Bool = false) =
+        function jlData(pm::Ptr{mjModel}; own::Bool = false)
             jlData(pm, mj_makeData(pm), ownmodel = own, owndata = true)
+        end
         jlData(jm::jlModel) = jlData(jm.cptr, own = false)
         Base.cconvert(::Type{Ptr{mjData}}, jd::jlData) = Base.cconvert(Ptr{mjData}, jd.d)
-        function Base.deepcopy_internal(jd::jlData, ::IdDict)
+        Base.deepcopy_internal(jd::jlData, ::IdDict) = Base.copy(jd)
+        function Base.copy(jd::jlData)
             error("jlData is not deep copiable. See `mj_copyData` and `mj_makeData` instead.")
         end
 

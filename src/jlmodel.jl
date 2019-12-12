@@ -109,8 +109,9 @@ function build_jlModel()
             jlModel(pm, own = true)
         end
         Base.cconvert(::Type{Ptr{mjModel}}, jm::jlModel) = Base.cconvert(Ptr{mjModel}, jm.m)
-        jlModel(jm::jlModel) = jlModel(mj_copyModel(jm.cptr), own = true)
-        Base.deepcopy_internal(jm::jlModel, ::IdDict) = jlModel(jm)
+        jlModel(jm::jlModel) = Base.copy(jm)
+        Base.deepcopy_internal(jm::jlModel, ::IdDict) = Base.copy(jm)
+        Base.copy(jm::jlModel) = jlModel(mj_copyModel(jm.cptr), own = true)
     end
 end
 
