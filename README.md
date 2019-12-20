@@ -107,4 +107,4 @@ mj_deleteData(d);
 mj_deleteModel(m);
 ```
 
-**Big thanks to [@klowrey](https://github.com/klowrey) for providing the [original](https://github.com/klowrey/MuJoCo.jl) MuJoCo wrapper**. Future development will continue at `Lyceum/MuJoCo.jl` while the original is archived.
+**Big thanks to [@klowrey](https://github.com/klowrey) for providing the [original](https://github.com/klowrey/MuJoCo.jl) MuJoCo wrapper**.
