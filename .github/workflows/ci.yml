@@ -14,7 +14,7 @@ jobs:
           - macOS-latest
           - windows-latest
         julia-version:
-          - '1.3.0'
+          - '1.3'
         julia-arch:
           - x64
     steps:
