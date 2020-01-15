@@ -89,7 +89,7 @@ end
 
 and compared to C:
 ```c
-#include "mujoco.j"
+#include "mujoco.h"
 #include <stdio.h>
 char error[1000] = "Could not load xml model";
 mj_activate("mjkey.txt");
