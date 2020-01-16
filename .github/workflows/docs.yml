@@ -1,9 +1,6 @@
 name: Documentation
 
-on:
-  push:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   build:
@@ -21,8 +18,8 @@ jobs:
           arch: ${{ matrix.arch }}
       - name: Add registry
         run: |
-          julia --color=yes --project -e 'using Pkg; Registry.add(RegistrySpec(url="https://github.com/Lyceum/LyceumRegistry.git"))'
-          julia --color=yes --project -e 'using Pkg; Registry.add(RegistrySpec(url="https://github.com/JuliaRegistries/General.git"))'
+          julia --color=yes --project -e 'using Pkg; Registry.add(RegistrySpec(url = "https://github.com/Lyceum/LyceumRegistry.git"))'
+          julia --color=yes --project -e 'using Pkg; Registry.add(RegistrySpec(url = "https://github.com/JuliaRegistries/General.git"))'
         shell: bash
       - name: Install dependencies
         run: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
