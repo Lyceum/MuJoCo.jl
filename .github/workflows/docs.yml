@@ -28,7 +28,7 @@ jobs:
         run: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
       - name: Build and deploy
         env:
-          MUJOCOJL_TEST_KEY: ${{ secrets.MJKEY }}
+          MUJOCO_KEY: ${{ secrets.MUJOCO_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For authentication with GitHub Actions token
           DOCUMENTER_KEY: ${{ secrets.LYCEUMBOT_DEPLOY_KEY}}
         run: julia --project=docs/ docs/make.jl

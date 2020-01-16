@@ -17,8 +17,8 @@ const MJVec{T} = MJArray{T,1}
 const MJMat{T} = MJArray{T,2}
 
 const ERRORSIZE = 1000
-const MJKEY_ENV_VAR = "MUJOCO_KEY_PATH"
-const MJTESTKEY_ENV_VAR = "MUJOCOJL_TEST_KEY"
+const KEY_PATH_ENV_VAR = "MUJOCO_KEY_PATH"
+const KEY_ENV_VAR = "MUJOCO_KEY"
 
 const ACTIVATED = Ref(false)
 isactivated() = ACTIVATED[]
@@ -50,13 +50,13 @@ function __init__()
     MJCore.CGlobals.mju_user_warning = warncb
     MJCore.CGlobals.mju_user_error = errcb
 
-    if !isactivated() && haskey(ENV, MJKEY_ENV_VAR)
-        path = normpath(ENV[MJKEY_ENV_VAR])
+    if !isactivated() && haskey(ENV, KEY_PATH_ENV_VAR)
+        path = normpath(ENV[KEY_PATH_ENV_VAR])
         isfile(path) || @mjerror "activating with key $path: No such file or directory"
         ACTIVATED[] = Bool(mj_activate(path))
         isactivated() || @mjerror "activating with key $path: invalid key"
-    elseif !isactivated() && haskey(ENV, MJTESTKEY_ENV_VAR)
-        mjkey = ENV[MJTESTKEY_ENV_VAR]
+    elseif !isactivated() && haskey(ENV, KEY_ENV_VAR)
+        mjkey = ENV[KEY_ENV_VAR]
         mktemp() do path, io
             write(io, String(base64decode(mjkey)))
             flush(io)
@@ -66,7 +66,7 @@ function __init__()
     else
         @warn """
 
-            No key found. Please set the env variable $MJKEY_ENV_VAR to point to a valid `mjkey` file.
+            No key found. Please set the env variable $KEY_PATH_ENV_VAR to point to a valid `mjkey` file.
             Alternatively, use `mj_activate(path_to_mjkey.txt)` to manually activate.
         """
     end
