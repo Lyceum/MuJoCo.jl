@@ -49,9 +49,9 @@ version = "1.0.0"
 
 [[AxisArrays]]
 deps = ["Dates", "IntervalSets", "IterTools", "RangeArrays"]
-git-tree-sha1 = "4781a1dc368d9f1630281ed4a4240a0f34a420de"
+git-tree-sha1 = "d27a38eb4312c8c42ac144d10e17e4ce7fb27c55"
 uuid = "39de3d68-74b9-583c-8d2d-e117c070f3a9"
-version = "0.4.0"
+version = "0.4.1"
 
 [[Compat]]
 deps = ["Base64", "Dates", "DelimitedFiles", "Distributed", "InteractiveUtils", "LibGit2", "Libdl", "LinearAlgebra", "Markdown", "Mmap", "Pkg", "Printf", "REPL", "Random", "Serialization", "SharedArrays", "Sockets", "SparseArrays", "Statistics", "Test", "UUIDs", "Unicode"]
@@ -263,9 +263,9 @@ version = "1.6.8+0"
 
 [[BangBang]]
 deps = ["Compat", "ConstructionBase", "Future", "InitialValues", "LinearAlgebra", "Requires", "Setfield", "Tables", "ZygoteRules"]
-git-tree-sha1 = "41d2f6149e717513d9361e887a1e6f00b396801e"
+git-tree-sha1 = "4b7b45b36e94d2b7b75b4ef6d165cafadd60843c"
 uuid = "198e06fe-97b7-11e9-32a5-e1d131e6ad66"
-version = "0.3.13"
+version = "0.3.14"
 
 [[Mmap]]
 uuid = "a63ad114-7e13-5084-954f-fe012c677804"
