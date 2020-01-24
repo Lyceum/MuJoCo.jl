@@ -1,6 +1,8 @@
 # MuJoCo
 
-*A Julia wrapper for the MuJoCo physics simulator*
+*A Julia wrapper for the MuJoCo physics simulator, a physics simulator designed for
+multi-joint dynamics with contacts and that has become a standard in robotics,
+reinforcement learning, and trajectory optimization, both in both academia and industry.*
 
 ![](https://github.com/Lyceum/MuJoCo.jl/workflows/CI/badge.svg)
 
