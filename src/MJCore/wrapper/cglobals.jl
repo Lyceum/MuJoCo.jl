@@ -10,8 +10,13 @@ const MJStrings = (
 )
 
 for (name, dims) in MJStrings
-    @eval const $name = Ref{Array{String, length($dims)}}()
+    dims = map(Int, dims)
+    T = SArray{Tuple{dims...}, String, length(dims), prod(dims)}
+    V = SArray{Tuple{dims...}, Ptr{Cchar}, length(dims), prod(dims)}
+    @eval const $name = Ref{$T}()
+    @eval const $(Symbol(:_, name)) = CRef{$(QuoteNode(name)), $V}()
 end
+
 
 # Callbacks
 for name in (
@@ -41,9 +46,10 @@ function _init_globals()
     # load all strings
     for (name, dims) in MJStrings
         ref = getfield(@__MODULE__, name)
-        s = load_mj_string_array(name, dims...)
-        ref[] = s
+        cref = getfield(@__MODULE__, Symbol(:_, name))
+        A = map(cref[]) do x
+            replace(Base.unsafe_string(x), "&" => "")
+        end
+        ref[] = A
     end
 end
-
-

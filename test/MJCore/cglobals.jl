@@ -88,8 +88,6 @@ const CB_GLOBALS = (
     :mjcb_control,
     :mjcb_contactfilter,
     :mjcb_sensor,
-    :mju_user_error,
-    :mju_user_warning,
     :mjcb_time,
     :mjcb_act_dyn,
     :mjcb_act_gain,
@@ -101,6 +99,17 @@ const CB_GLOBALS = (
 end
 
 @testset "$name" for name in CB_GLOBALS
-    x = getfield(MJCore, name)[]
-    @test x isa Ptr{Ptr{Cvoid}} && x != C_NULL
+    ptr = Base.unsafe_convert(Ptr, getfield(MJCore, name))
+    val = getfield(MJCore, name)[]
+    @test ptr isa Ptr{Ptr{Cvoid}} && ptr != C_NULL
+    @test val isa Ptr{Cvoid} && val == C_NULL
+end
+
+@testset "warn/error CB" begin
+    for name in (:mju_user_error, :mju_user_warning)
+        ptr = Base.unsafe_convert(Ptr, getfield(MJCore, name))
+        val = getfield(MJCore, name)[]
+        @test ptr isa Ptr{Ptr{Cvoid}} && ptr != C_NULL
+        @test val isa Ptr{Cvoid} && val != C_NULL
+    end
 end
