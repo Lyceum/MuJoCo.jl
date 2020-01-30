@@ -11,6 +11,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
+          - ubuntu-16.04
           - macOS-latest
           - windows-latest
         julia-version:
