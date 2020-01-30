@@ -1,4 +1,4 @@
-globals = (
+const STRING_GLOBALS = (
     mjDISABLESTRING = [
         "Constraint",
         "Equality",
@@ -46,7 +46,7 @@ globals = (
         "ContactForce",
     ],
     mjFRAMESTRING = ["None", "Body", "Geom", "Site", "Camera", "Light", "World"],
-    mjVISSTRING = [
+    mjVISSTRING = permutedims([
         "Convex Hull" "0" "H"
         "Texture" "1" "X"
         "Joint" "0" "J"
@@ -57,7 +57,7 @@ globals = (
         "Range Finder" "1" "Y"
         "Constraint" "0" "N"
         "Inertia" "0" "I"
-        "SCL Inertia" "0" "S"
+        "Scale Inertia" "0" "'"
         "Perturb Force" "0" "B"
         "Perturb Object" "1" "O"
         "Contact Point" "0" "C"
@@ -69,42 +69,38 @@ globals = (
         "Select Point" "0" "E"
         "Static Body" "1" "D"
         "Skin" "1" ";"
-    ],
-    mjRNDSTRING = [
-        "Shadow",
-        "1",
-        "S",
-        "Wireframe",
-        "0",
-        "W",
-        "Reflection",
-        "1",
-        "R",
-        "Additive",
-        "0",
-        "L",
-        "Skybox",
-        "1",
-        "K",
-        "Fog",
-        "0",
-        "G",
-        "Haze",
-        "1",
-        "/",
-        "Segment",
-        "0",
-        ",",
-        "Id Color",
-        "0",
-        ".",
-    ],
+    ]),
+    mjRNDSTRING = permutedims([
+        "Shadow" "1" "S"
+        "Wireframe" "0" "W"
+        "Reflection" "1" "R"
+        "Additive" "0" "L"
+        "Skybox" "1" "K"
+        "Fog" "0" "G"
+        "Haze" "1" "/"
+        "Segment" "0" ","
+        "Id Color" "0" "."
+    ]),
 )
 
-@testset "$k" for (k, v) in pairs(globals)
-    if k === :mjVISSTRING
-        @test_broken MJCore.getglobal(Val{k}()) == v
-    else
-        @test MJCore.getglobal(Val{k}()) == v
-    end
+const CB_GLOBALS = (
+    :mjcb_passive,
+    :mjcb_control,
+    :mjcb_contactfilter,
+    :mjcb_sensor,
+    :mju_user_error,
+    :mju_user_warning,
+    :mjcb_time,
+    :mjcb_act_dyn,
+    :mjcb_act_gain,
+    :mjcb_act_bias,
+)
+
+@testset "$name" for (name, testval) in pairs(STRING_GLOBALS)
+    @test getfield(MJCore, name)[] == testval
+end
+
+@testset "$name" for name in CB_GLOBALS
+    x = getfield(MJCore, name)[]
+    @test x isa Ptr{Ptr{Cvoid}} && x != C_NULL
 end

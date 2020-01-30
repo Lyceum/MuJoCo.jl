@@ -44,11 +44,7 @@ include("wrapper/mjmujoco.jl")
 
 
 function __init__()
-    # install error/warning handlers
-    warncb = @cfunction(mju_user_warning_cb, Cvoid, (Cstring,))
-    errcb = @cfunction(mju_user_error_cb, Cvoid, (Cstring,))
-    MJCore.CGlobals.mju_user_warning = warncb
-    MJCore.CGlobals.mju_user_error = errcb
+    _init_globals()
 
     if !isactivated() && haskey(ENV, KEY_PATH_ENV_VAR)
         path = normpath(ENV[KEY_PATH_ENV_VAR])
