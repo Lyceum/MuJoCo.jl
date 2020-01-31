@@ -1,14 +1,21 @@
 # MuJoCo
 
 *A Julia wrapper for the MuJoCo physics simulator, a physics simulator designed for
-multi-joint dynamics with contacts and that has become a standard in robotics,
+multi-joint dynamics with contacts that has become a standard in robotics,
 reinforcement learning, and trajectory optimization, both in both academia and industry.*
 
 ![](https://github.com/Lyceum/MuJoCo.jl/workflows/CI/badge.svg)
 
-Note that to use MuJoCo, you'll need a valid license which you can obtain from
-[here](https://www.roboti.us/license.html). Up to three thirty-day trials can be obtained
-for free from MuJoCo's webiste, while students are eligible for a free personal license.
+`MuJoCo.jl` is part of the [Lyceum](https://www.lyceum.ml), a software suite for
+machine learning, control, and trajectory optimization. For an example of how to use
+MuJoCo.jl, check out [LyceumMuJoCo.jl](https://github.com/Lyceum/LyceumMuJoCo.jl).
+
+
+## Obtaining a License
+
+To use MuJoCo, you'll need a valid license which you can obtain from
+[here](https://www.roboti.us/license.html). Up to three, thirty-day trials can be obtained
+for free from MuJoCo's webiste and students are eligible for a free personal license.
 Once you have obtained the license file, set the environment variable `MUJOCO_KEY_PATH`
 to point to its location. On Linux machines this would look like:
 ```
@@ -44,7 +51,7 @@ For more complete about the MuJoCo physics simulator, see [MuJoCo's documentatio
 
 #### `jlData` and `jlModel`
 
-`MuJoCo.Sugar` provides `jlData` and `jlModel` which differ from `MJCore.mjData` and `MJCore.mjModel` as follows:
+`MuJoCo` provides `jlData` and `jlModel` which differ from `MJCore.mjData` and `MJCore.mjModel` as follows:
 
    1) Fields of type `SArray{S,T,N}` become `Array{T, N}` (see [#7](https://github.com/Lyceum/MuJoCo.jl/issues/7))
    2) Field of type `Ptr{T<:Number}` become `Array{T, N}` (e.g. `size(jlData.qpos) == (nq, )`).
@@ -64,16 +71,30 @@ m = jlModel("humanoid.xml")
 
 #### Globals
 
-Non-pointer, `const` globals from MuJoCo are available under `MuJoCo.MJCore` (e.g. `MuJoCo.MJCore.mjtNum`). Other globals, because they may change at runtime, are available as `MuJoCo.MJCore.CGlobals.mjDISABLESTRING` and are loaded dynamically. All `mjcb_*` callbacks are available as well. For example, we set `mjcb_user_warning_cb` to generate Julia warnings as follows:
+All MuJoCo globals are available under in the `MJCore` module (e.g. `MJCore.mjVISSTRING`).
+`const` global primitives like `mjMAXIMP` and `mjVISSTRING` are defined directly in Julia,
+while global callbacks are stored in a `Ref`-like object called a `CRef` and can be used
+in the same manner as `RefValue`. Under the hood, calls to `getindex`/`setindex!` perform
+the appropriate load/store from the corresponding `Ptr{Cvoid}`.
+
+##### Example
+
 ```julia
-my_warning_cb(msg::Cstring) = (@warn unsafe_string(msg); nothing)
+@assert MJCore.mjMAXIMP == 0.9999
+@assert MJCore.mjDISABLESTRING[1] == "Constraint"
+# Set the `mjcb_user_warning_cb` callback to generate Julia warnings (note that MuJoCo.jl
+# already installs proper warning/error handlers, which you most likely don't want to override)
+my_warning_cb() = (@warn unsafe_string(msg); nothing)
 warncb = @cfunction(my_warning_cb, Cvoid, (Cstring,))
-MJCore.CGlobals.mju_user_warning = warncb
+MJCore.mju_user_warning[] = warncb
 ```
+
 See [this blog post](https://julialang.org/blog/2013/05/callback) for more information on how to set C callbacks from Julia.
 
 ## Getting Started
-MuJoCo.jl is currently registered in Lyceum's package registry. Until it is moved to General, you will need to add `Lyceum/LyceumRegistry`.
+
+MuJoCo.jl is currently registered in Lyceum's package registry. Until it is moved to General,
+you will need to add `Lyceum/LyceumRegistry`.
 
 From the Julia REPL, type `]` to enter Pkg mode:
 ```julia-repl

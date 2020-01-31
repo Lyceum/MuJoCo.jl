@@ -2,14 +2,6 @@
 const UnsafeVector{T} = UnsafeArray{T,1}
 const UnsafeMatrix{T} = UnsafeArray{T,2}
 
-# Loads char** (NULL-terminated)
-function load_mj_string_array(name::Symbol, n)
-    p = convert(Ptr{Ptr{Cchar}}, @eval cglobal(($(QuoteNode(name)), libmujoco)))
-    @assert !(p == C_NULL)
-    A = Base.unsafe_wrap(Array, p, Int(n))
-    @assert !any(ptr -> (ptr == C_NULL), A)
-    Base.map(Base.unsafe_string, A)
-end
 
 function modelkind(path::AbstractString)
     ext = last(split(last(splitext(path)), '.'))
@@ -135,4 +127,26 @@ function create_constructors(sdef)
     push!(sdef[:constructors], posonly_innerctor_typed)
     push!(sdef[:constructors], posonly_innerctor)
     MacroTools.combinestructdef(sdef)
+end
+
+struct CRef{name, T}
+    CRef{name, T}() where {name, T} = new{name::Symbol, T}()
+end
+
+Base.unsafe_convert(::Type{Ptr{T}}, ::CRef{name, T}) where {name,T} = getglobal(Val(name), T)
+Base.unsafe_convert(::Type{Ptr}, ::CRef{name, T}) where {name,T} = getglobal(Val(name), T)
+
+Base.getindex(::CRef{name,T}) where {name,T} = loadglobal(Val(name), T)
+Base.setindex!(::CRef{name,T}, x) where {name,T} = storeglobal!(Val(name), T, x)
+
+
+function loadglobal(::Val{name}, ::Type{T}, i::Integer = 1) where {name,T}
+    Base.unsafe_load(getglobal(Val(name), T))
+end
+
+getglobal(::Val{name}, ::Type{T}) where {name,T} = cglobal((name, libmujoco), T)
+
+function storeglobal!(::Val{name}, ::Type{T}, x) where {name,T}
+    ptr = getglobal(Val(name), T)
+    Base.unsafe_store!(ptr, Base.unsafe_convert(T, Base.cconvert(T, x)))
 end

@@ -44,7 +44,6 @@ using .MJCore: AbstractMJModel,
                 UnsafeMatrix,
                 MuJoCoException,
                 @mjerror,
-                load_mj_string_array,
                 MuJoCoException,
                 union_types
 
@@ -180,8 +179,5 @@ function mjshow(io::IO, x::Union{MJCore.MJTypes,JLTypes}, level::Int; filter=(x,
         end
     end
 end
-
-include("precompile.jl")
-__precompile__()
 
 end # module
