@@ -72,20 +72,19 @@ m = jlModel("humanoid.xml")
 #### Globals
 
 All MuJoCo globals are available under in the `MJCore` module (e.g. `MJCore.mjVISSTRING`).
-`const` global primitives like `Int` (e.g. `mjMAXIMP`) are defined directly in Julia, while
-MuJoCo string arrays (e.g. `mjVISSTRING`) are stored as `RefValue`'s and loaded upon
-module initialization. Global callbacks are stored in a `RefValue`-like object
-called a `CRef` and can be used in the same manner as `RefValue`. Under the hood,
-calls to `getindex`/`setindex!` perform the appropriate load/store from the corresponding
-`Ptr{Cvoid}`.
+`const` global primitives like `mjMAXIMP` and `mjVISSTRING` are defined directly in Julia,
+while global callbacks are stored in a `Ref`-like object called a `CRef` and can be used
+in the same manner as `RefValue`. Under the hood, calls to `getindex`/`setindex!` perform
+the appropriate load/store from the corresponding `Ptr{Cvoid}`.
 
 ##### Example
 
 ```julia
 @assert MJCore.mjMAXIMP == 0.9999
-@assert MJCore.mjDISABLESTRING[][1] == "Constraint"
-# Set the `mjcb_user_warning_cb` callback to generate Julia warnings:
-my_warning_cb(msg::Cstring) = (@warn unsafe_string(msg); nothing)
+@assert MJCore.mjDISABLESTRING[1] == "Constraint"
+# Set the `mjcb_user_warning_cb` callback to generate Julia warnings (note that MuJoCo.jl
+# already installs proper warning/error handlers, which you most likely don't want to override)
+my_warning_cb() = (@warn unsafe_string(msg); nothing)
 warncb = @cfunction(my_warning_cb, Cvoid, (Cstring,))
 MJCore.mju_user_warning[] = warncb
 ```

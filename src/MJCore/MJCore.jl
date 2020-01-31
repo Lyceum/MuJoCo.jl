@@ -66,6 +66,7 @@ function __init__()
             Alternatively, use `mj_activate(path_to_mjkey.txt)` to manually activate.
         """
     end
+    nothing
 end
 
 const MJTypes = Union{

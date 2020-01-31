@@ -94,8 +94,20 @@ const CB_GLOBALS = (
     :mjcb_act_bias,
 )
 
+const mjCOLLISIONFUNC = [
+    1  1  1  1  1  1  1  1
+    1  1  1  1  1  1  1  1
+    0  0  0  1  1  1  1  1
+    0  0  0  0  1  1  1  1
+    0  0  0  0  0  1  1  1
+    0  0  0  0  0  0  1  1
+    0  0  0  0  0  0  0  1
+    0  0  0  0  0  0  0  0
+]
+
+
 @testset "$name" for (name, testval) in pairs(STRING_GLOBALS)
-    @test getfield(MJCore, name)[] == testval
+    @test getfield(MJCore, name) == testval
 end
 
 @testset "$name" for name in CB_GLOBALS
@@ -113,3 +125,5 @@ end
         @test val isa Ptr{Cvoid} && val != C_NULL
     end
 end
+
+@test mjCOLLISIONFUNC == map(isequal(C_NULL), MJCore.mjCOLLISIONFUNC)
