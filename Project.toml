@@ -17,7 +17,6 @@ UnsafeArrays = "c4a57d5a-5b31-53a6-b365-19f8c011fbd6"
 
 [compat]
 AxisArrays = "0.4.1"
-BangBang = "= 0.3.0, = 0.3.1, = 0.3.2"
 CEnum = "0.2"
 MacroTools = "0.5.3"
 Reexport = "0.2"
