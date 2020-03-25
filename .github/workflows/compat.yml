@@ -14,7 +14,7 @@ jobs:
         os:
           - ubuntu-latest
         julia-version:
-          - '1.3'
+          - '1.4'
         julia-arch:
           - x64
     steps:
@@ -27,12 +27,10 @@ jobs:
         run: |
           julia --color=yes -e 'using Pkg; Registry.add(RegistrySpec(url = "https://github.com/Lyceum/LyceumRegistry.git"))'
           julia --color=yes -e 'using Pkg; Registry.add(RegistrySpec(url = "https://github.com/JuliaRegistries/General.git"))'
-      - name: Add DevTools
-        run: julia --color=yes -e 'using Pkg; Pkg.add("DevTools")'
+      - name: Add LyceumDevTools
+        run: julia --color=yes -e 'using Pkg; Pkg.add("LyceumDevTools")'
       - name: Update compat
-        run: julia --color=yes -e 'using DevTools; DevTools.Compat.ghactions()'
+        run: julia --color=yes -e 'using LyceumDevTools; LyceumDevTools.Compat.ghactions()'
         env:
-          COMPAT_TOKEN: ${{ secrets.LYCEUMBOT_PAT }}
           COMPAT_USERNAME: lyceumbot
-          COMPAT_USEREMAIL: lyceumdevs@gmail.com
-
+          COMPAT_TOKEN: ${{ secrets.LYCEUMBOT_PAT }}
