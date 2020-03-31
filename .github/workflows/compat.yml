@@ -7,7 +7,7 @@ on:
 
 jobs:
   Compat:
-    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }}
+    name: Julia ${{ matrix.julia-version }} - ${{ matrix.os }} - ${{ matrix.julia-arch }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
