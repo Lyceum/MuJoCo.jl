@@ -1,5 +1,6 @@
 using Test
 using UnsafeArrays, BangBang
+using LinearAlgebra
 
 using MuJoCo
 using MuJoCo: TESTMODELXML
