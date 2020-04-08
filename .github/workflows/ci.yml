@@ -11,18 +11,15 @@ jobs:
   test:
     name: Julia ${{ matrix.julia-version }} - ${{ matrix.os }} - ${{ matrix.julia-arch }}
     runs-on: ${{ matrix.os }}
+    env:
+      JULIA_NUM_THREADS: 2
+      MUJOCO_KEY: ${{ secrets.MUJOCO_KEY }}
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - macOS-latest
-          - windows-latest
-        julia-version:
-          - '1.3'
-          - '1.4'
-        julia-arch:
-          - x64
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        julia-version: ['1.3', '1.4']
+        julia-arch: [x64]
     steps:
       - uses: actions/checkout@v1.0.0
       - uses: julia-actions/setup-julia@latest
@@ -31,12 +28,14 @@ jobs:
           arch: ${{ matrix.julia-arch }}
       - name: Add registry
         run: |
-          julia --color=yes --project -e 'using Pkg; Registry.add(RegistrySpec(url = "https://github.com/Lyceum/LyceumRegistry.git"))'
-          julia --color=yes --project -e 'using Pkg; Registry.add(RegistrySpec(url = "https://github.com/JuliaRegistries/General.git"))'
+          julia -e 'using Pkg; Registry.add(RegistrySpec(url = "https://github.com/Lyceum/LyceumRegistry.git"))'
+          julia -e 'using Pkg; Registry.add(RegistrySpec(url = "https://github.com/JuliaRegistries/General.git"))'
         shell: bash
-      - uses: julia-actions/julia-buildpkg@master
-      - uses: julia-actions/julia-runtest@master
-        env:
-          MUJOCO_KEY: ${{ secrets.MUJOCO_KEY }}
-          JULIA_NUM_THREADS: 2
-
+      - name: Install Run.jl
+        run: |
+          julia -e 'using Pkg; pkg"add https://github.com/tkf/Run.jl"'
+        shell: bash
+      - name: Prepare environment
+        run: julia -e 'using Run; Run.prepare_test()'
+      - name: Run tests
+        run:  julia -e 'using Run; Run.test()'
