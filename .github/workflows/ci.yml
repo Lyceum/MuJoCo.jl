@@ -38,4 +38,5 @@ jobs:
       - uses: julia-actions/julia-runtest@master
         env:
           MUJOCO_KEY: ${{ secrets.MUJOCO_KEY }}
+          JULIA_NUM_THREADS: 2
 
