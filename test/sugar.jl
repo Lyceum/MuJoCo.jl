@@ -3,7 +3,6 @@
 # 1) isbits types like Cint/SArray (e.g. jlModel.nq or jlData.solver) -> pass through to inner mj type (e.g. jlData.d::mjData)
 # 2) Ptr to "statically" sized Array (e.g. d.qpos) -> Base.Array
 # 3) Ptr to dynamically sized UnsafeArray (e.g. d.contact) -> Dynamically sized UnsafeArrays.UnsafeArray
-using LinearAlgebra
 
 @testset "Sugar" begin
 
