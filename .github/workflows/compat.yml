@@ -14,7 +14,7 @@ jobs:
           julia --color=yes -e 'using Pkg; pkg"registry add https://github.com/JuliaRegistries/General.git"'
           julia --color=yes -e 'using Pkg; pkg"registry add https://github.com/Lyceum/LyceumRegistry.git"'
       - name: Install LyceumDevTools.jl
-        run: julia --color=yes -e 'using Pkg; pkg"add LyceumDevTools"'
+        run: julia --color=yes -e 'using Pkg; pkg"add LyceumDevTools#master"'
       - name: Update compat
         run: julia --color=yes -e 'using LyceumDevTools.Compat; ghactions(sub_dir="test", share_tracked_deps=true)'
         #run: julia --color=yes -e 'using LyceumDevTools.Compat; ghactions()'
