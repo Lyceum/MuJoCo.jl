@@ -1,7 +1,7 @@
 name = "MuJoCo"
 uuid = "93189219-7048-461c-94ec-443a161ed927"
 authors = ["Colin Summers", "Kendall Lowrey"]
-version = "0.3.0"
+version = "0.3.1-DEV"
 
 [deps]
 AxisArrays = "39de3d68-74b9-583c-8d2d-e117c070f3a9"
