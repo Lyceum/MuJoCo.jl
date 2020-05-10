@@ -2,35 +2,22 @@ name: UpdateCompat
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   repository_dispatch:
 
 jobs:
-  Compat:
-    name: Julia ${{ matrix.julia-version }} - ${{ matrix.os }} - ${{ matrix.julia-arch }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-        julia-version:
-          - '1.4'
-        julia-arch:
-          - x64
+  UpdateCompat:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1.0.0
-      - uses: julia-actions/setup-julia@latest
-        with:
-          version: ${{ matrix.julia-version }}
-          arch: ${{ matrix.julia-arch }}
-      - name: Add registry
+      - name: Add registries
         run: |
-          julia --color=yes -e 'using Pkg; Registry.add(RegistrySpec(url = "https://github.com/Lyceum/LyceumRegistry.git"))'
-          julia --color=yes -e 'using Pkg; Registry.add(RegistrySpec(url = "https://github.com/JuliaRegistries/General.git"))'
-      - name: Add LyceumDevTools
-        run: julia --color=yes -e 'using Pkg; Pkg.add("LyceumDevTools")'
+          julia --color=yes -e 'using Pkg; pkg"registry add https://github.com/JuliaRegistries/General.git"'
+          julia --color=yes -e 'using Pkg; pkg"registry add https://github.com/Lyceum/LyceumRegistry.git"'
+      - name: Install LyceumDevTools.jl
+        run: julia --color=yes -e 'using Pkg; pkg"add LyceumDevTools"'
       - name: Update compat
-        run: julia --color=yes -e 'using LyceumDevTools; LyceumDevTools.Compat.ghactions()'
+        run: julia --color=yes -e 'using LyceumDevTools.Compat; ghactions(sub_dir="test", share_tracked_deps=true)'
+        #run: julia --color=yes -e 'using LyceumDevTools.Compat; ghactions()'
         env:
           COMPAT_USERNAME: lyceumbot
           COMPAT_TOKEN: ${{ secrets.LYCEUMBOT_PAT }}
