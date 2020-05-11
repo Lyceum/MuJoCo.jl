@@ -16,8 +16,8 @@ jobs:
       - name: Install LyceumDevTools.jl
         run: julia --color=yes -e 'using Pkg; pkg"add LyceumDevTools#master"'
       - name: Update compat
-        run: julia --color=yes -e 'using LyceumDevTools.Compat; ghactions(sub_dir="test", share_tracked_deps=true)'
-        #run: julia --color=yes -e 'using LyceumDevTools.Compat; ghactions()'
+        run: julia --color=yes -e 'using LyceumDevTools.Compat; ghactions()'
+        #run: julia --color=yes -e 'using LyceumDevTools.Compat; ghactions(update_from_test=false)'
         env:
           COMPAT_USERNAME: lyceumbot
           COMPAT_TOKEN: ${{ secrets.LYCEUMBOT_PAT }}
