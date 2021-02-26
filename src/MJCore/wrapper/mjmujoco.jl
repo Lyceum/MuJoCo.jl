@@ -2424,6 +2424,158 @@ function mju_writeLog(type::String, msg::String)
 end
 
 
+#---------------------- Quaternions ----------------------------------------------------
+
+"""Rotate vector by quaternion."""
+function mju_rotVecQuat(res::MJVec, vec::MJVec, quat::MJVec)
+    @assert length(res) >= 3
+    @assert length(vec) >= 3
+    @assert length(quat) >= 4
+    ccall(
+          (:mju_rotVecQuat, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}, Ptr{mjtNum}),
+          res, vec, quat
+         )
+end
+
+"""Conjugate quaternion, corresponding to opposite rotation."""
+function mju_negQuat(res::MJVec, quat::MJVec)
+    @assert length(res) >= 4
+    @assert length(quat) >= 4
+    ccall(
+          (:mju_negQuat, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}),
+          res, quat
+         )
+end
+
+"""Muiltiply quaternions."""
+function mju_mulQuat(res::MJVec, quat1::MJVec, quat2::MJVec)
+    @assert length(res) >= 4
+    @assert length(quat1) >= 4
+    @assert length(quat2) >= 4
+    ccall(
+          (:mju_mulQuat, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}, Ptr{mjtNum}),
+          res, quat1, quat2
+         )
+end
+
+"""Muiltiply quaternion and axis."""
+function mju_mulQuatAxis(res::MJVec, quat::MJVec, axis::MJVec)
+    @assert length(res) >= 4
+    @assert length(quat) >= 4
+    @assert length(axis) >= 3
+    ccall(
+          (:mju_mulQuatAxis, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}, Ptr{mjtNum}),
+          res, quat, axis
+         )
+end
+
+
+"""Convert axisAngle to quaternion."""
+function mju_axisAngle2Quat(res::MJVec, axis::MJVec, angle::mjtNum)
+    @assert length(res) >= 4
+    @assert length(axis) >= 3
+    ccall(
+          (:mju_axisAngle2Quat, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}, mjtNum),
+          res, axis, angle
+         )
+end
+
+"""Convert quaternion (corresponding to orientation difference) to 3D velocity."""
+function mju_quat2Vel(res::MJVec, quat::MJVec, dt::mjtNum)
+    @assert length(res) >= 3
+    @assert length(quat) >= 4
+    ccall(
+          (:mju_quat2vel, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}, mjtNum),
+          res, quat, dt
+         )
+end
+
+"""Subtract quaternions, express as 3D velocity: qb*quat(res) = qa."""
+function mju_subQuat(res::MJVec, qa::MJVec, qb::MJVec)
+    @assert length(res) >= 3
+    @assert length(qa) >= 4
+    @assert length(qb) >= 4
+    ccall(
+          (:mju_subQuat, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}, Ptr{mjtNum}),
+          res, qa, qb
+         )
+end
+
+"""Convert quaternion to 3D rotation matrix."""
+function mju_quat2Mat(res::MJVec, quat::MJVec);
+    @assert length(res) >= 9
+    @assert length(quat) >= 4
+    ccall(
+          (:mju_quat2Mat, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}),
+          res, quat
+         )
+end
+
+"""Convert 3D rotation matrix to quaterion."""
+function mju_mat2Quat(quat::MJVec, mat::MJVec)
+    @assert length(quat) >= 4
+    @assert length(mat) >= 9
+    ccall(
+          (:mju_mat2Quat, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}),
+          quat, mat
+         )
+end
+
+"""Compute time-derivative of quaternion, given 3D rotational velocity."""
+function mju_derivQuat(res::MJVec, quat::MJVec, vel::MJVec)
+    @assert length(res) >= 4
+    @assert length(quat) >= 4
+    @assert length(vel) >= 3
+    ccall(
+          (:mju_derivQuat, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}, Ptr{mjtNum}),
+          res, quat, vel
+         )
+end
+
+"""Integrate quaterion given 3D angular velocity."""
+function mju_quatIntegrate(quat::MJVec, vel::MJVec, scale::mjtNum)
+    @assert length(quat) >= 4
+    @assert length(vel) >= 3
+    ccall(
+          (:mju_quatIntegrate, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}, mjtNum),
+          quat, vel, scale
+         )
+end
+
+"""Construct quaternion performing rotation from z-axis to given vector."""
+function mju_quatZ2Vec(quat::MJVec, vec::MJVec)
+    @assert length(res) >= 4
+    @assert length(vec) >= 3
+    ccall(
+          (:mju_quatZ2vec, libmujoco),
+          Cvoid,
+          (Ptr{mjtNum}, Ptr{mjtNum}),
+          quat, vec 
+         )
+end
+
 
 #---------------------- Utility functions: miscellaneous -------------------------------
 

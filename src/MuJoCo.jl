@@ -114,7 +114,7 @@ const CONTROL_FIELDS = (
 )
 
 # For @set!! macro to work
-@inline function BangBang.setproperties!(value::JLTypes, patch::NamedTuple)
+@inline function BangBang.setproperties!!(value::JLTypes, patch::NamedTuple)
     ntuple(length(patch)) do i
         setproperty!(value, keys(patch)[i], patch[i])
     end
