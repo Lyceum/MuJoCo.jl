@@ -102,12 +102,13 @@ end
             jf3 = getproperty(jd3, name)
             test() = jf1 == jf2 == jf3
 
-            if name === :solver_nnz
-                # TODO
-                @test_skip test()
-            else
-                @test test()
-            end
+            #if name === :solver_nnz
+            #    # TODO
+            #    @test_skip test()
+            #else
+            #    @test test()
+            #end
+            @test test()
 
             #if name === :solver_nnz
             #    # NOTE: bug in MuJoCo? d1.solver_nnz == 729,

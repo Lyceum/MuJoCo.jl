@@ -40,5 +40,7 @@ end
 
 @testset "MuJoCo.jl" begin
     include("MJCore/MJCore.jl")
+    include("MJCore/mjmujoco.jl")
+    #include("MJCore/cglobals.jl")
     include("sugar.jl")
 end
