@@ -1,13 +1,13 @@
 name = "MuJoCo"
 uuid = "93189219-7048-461c-94ec-443a161ed927"
 authors = ["Colin Summers", "Kendall Lowrey"]
-version = "0.3.1"
+version = "0.3.2"
 
 [deps]
-AxisArrays = "39de3d68-74b9-583c-8d2d-e117c070f3a9"
 BangBang = "198e06fe-97b7-11e9-32a5-e1d131e6ad66"
 Base64 = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 CEnum = "fa961155-64e5-5f13-b03f-caf6b980ea82"
+ComponentArrays = "b0b7db55-cfe3-40fc-9ded-d10e2dbeff66"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MacroTools = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
 MuJoCo_jll = "32af7c3b-80ec-5621-8194-2f6cb2280831"

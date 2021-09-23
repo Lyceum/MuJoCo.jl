@@ -34,6 +34,7 @@ end
 
 function test_uninit(T)
     zeroarg = T()
+    zeroarg = T() # huh? first empty init may be different
     posonly = T((getfield(zeroarg, name) for name in fieldnames(T))...)
     isequal(zeroarg, posonly) && hash(zeroarg) == hash(posonly)
 end

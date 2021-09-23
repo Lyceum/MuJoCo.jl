@@ -43,7 +43,7 @@ All functions are documented for convenience:
 help?> mj_step
 ```
 
-For more complete about the MuJoCo physics simulator, see [MuJoCo's documentation](http://www.mujoco.org/book).
+For more complete info about the MuJoCo physics simulator, see [MuJoCo's documentation](http://www.mujoco.org/book).
 
 
 ### MuJoCo
@@ -67,6 +67,10 @@ m = jlModel("humanoid.xml")
 @assert m.opt.timestep == 0.002
 @set!! m.opt.timestep = 0.001
 @assert m.opt.timestep == 0.001
+d = jlData(m)
+mn, dn = namify(m, d) # Produced NamedTuples with struct fields and ComponentArrays
+dn.qpos[:root_x]      # allows users to access MuJoCo fields with names specified in the XML.
+dn.qpos[Val(:root_x)] # For better performance, create a Val of the symbol name.
 ```
 
 #### Globals
@@ -99,8 +103,8 @@ you will need to add `Lyceum/LyceumRegistry`.
 From the Julia REPL, type `]` to enter Pkg mode:
 ```julia-repl
 julia> ]
-(v1.3) pkg> registry add https://github.com/Lyceum/LyceumRegistry.git
-(v1.3) pkg> add MuJoCo
+(v1.6) pkg> registry add https://github.com/Lyceum/LyceumRegistry.git
+(v1.6) pkg> add MuJoCo
 ```
 
 Below we simulate passive dynamics and print out joint positions

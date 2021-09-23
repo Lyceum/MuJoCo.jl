@@ -2,9 +2,9 @@ module MuJoCo
 
 using MacroTools: combinestructdef
 using Base: RefValue
-using AxisArrays: Axis, AxisArray
 using
     UnsafeArrays,
+    ComponentArrays,
     StaticArrays,
     Reexport,
     BangBang

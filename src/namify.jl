@@ -219,25 +219,28 @@ end
 
 function namify_array(A, newaxes)
     axisarray_axes = map(newaxes) do newax
-        axname = newax.name
-        if newax isa UnnamedAxis
-            Axis{axname}(1:length(newax))
+        l = length(newax)
+        if newax isa LinearAxis 
+            keys = Tuple(newax.labels)
+            vals = Tuple(1:l)
         else
-            Axis{axname}(SVector{length(newax),Symbol}(newax.labels))
+            keys = (newax.name,)
+            vals = (1:l,)
         end
+        nt = (; zip(keys, vals)...)
+        ComponentArrays.Axis(nt)
     end
-    newsize = length.(axisarray_axes)
-    AxisArray(reshape(A, newsize), axisarray_axes)
+    newsize = map(length, newaxes)
+    ComponentArray{axisarray_axes}(reshape(A, newsize))
 end
 
 function namify_one(x::Union{jlModel,jlData}, axismapping)
     newfields = []
     fieldnames = Symbol[]
-    for fieldname in propertynames(x)
+    for (fieldname, axis) in axismapping
         field = getproperty(x, fieldname)
-        if field isa Array && haskey(axismapping, fieldname)
-            newaxes = axismapping[fieldname]
-            push!(newfields, namify_array(field, newaxes))
+        if field isa Array
+            push!(newfields, namify_array(field, axis))
             push!(fieldnames, fieldname)
         end
     end
@@ -250,3 +253,4 @@ function namify(m::jlModel, d::jlData)
     m_axmappings = associate_axes(m, m, sz2ax)
     namify_one(m, m_axmappings), namify_one(d, d_axmappings)
 end
+
