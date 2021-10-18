@@ -13,11 +13,10 @@ MuJoCo.jl, check out [LyceumMuJoCo.jl](https://github.com/Lyceum/LyceumMuJoCo.jl
 
 ## Obtaining a License
 
-To use MuJoCo, you'll need a valid license which you can obtain from
-[here](https://www.roboti.us/license.html). Up to three, thirty-day trials can be obtained
-for free from MuJoCo's webiste and students are eligible for a free personal license.
-Once you have obtained the license file, set the environment variable `MUJOCO_KEY_PATH`
-to point to its location. On Linux machines this would look like:
+To use MuJoCo 2.0, you'll need a valid license which you can obtain for free from
+[here](https://roboti.us/license.html). Once you have obtained the license file, 
+set the environment variable `MUJOCO_KEY_PATH` to point to its location.
+On Linux machines this would look like:
 ```
 $ export MUJOCO_KEY_PATH=/path/to/mjkey.txt
 ```
